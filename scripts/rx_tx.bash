@@ -1,0 +1,1 @@
+cmd() { printf '%s\r' "$@" > /dev/ttyUSB0 && hexdump -C < /dev/ttyUSB0; }
