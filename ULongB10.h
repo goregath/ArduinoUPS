@@ -13,13 +13,13 @@
 
 class ULongB10 : public Printable {
 private:
-	unsigned long int*_val;
+	unsigned long int &_val;
 public:
-	ULongB10(unsigned long *val) : _val(val){}
+	ULongB10(unsigned long &val) : _val(val) {}
 	virtual ~ULongB10() {}
 	
 	size_t printTo(Print& p) const {
-		return p.print(*_val, 10);
+		return p.print(_val, 10);
 	}
 };
 

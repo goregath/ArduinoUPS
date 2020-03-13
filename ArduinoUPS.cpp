@@ -1,18 +1,22 @@
+#include <ctype.h>
 #include <Arduino.h>
 #include <HardwareSerial.h>
 #include <uptime_formatter.h>
 
+#include "Config.h"
 #include "ULongB10.h"
-
-#define RX_BUFFER_SIZE 64
+#include "UFixedDecimal.h"
 
 // overflow in approx. 50 days
 unsigned long ticks;
 String rx = "";
 bool rx_ready = false;
 
+uint16_t vccRef;
+
 // converters
-ULongB10 uLongB10(&ticks);
+ULongB10 uLongB10(ticks);
+UFixedDecimal<3,2> vccRef_3_2(vccRef, 0.001);
 
 void ups_parse();
 void response(const char *);
@@ -24,6 +28,12 @@ void setup() {
 		;
 	}
 	rx.reserve(RX_BUFFER_SIZE);
+#ifdef DEBUG
+	vccRef = 1234;
+	Serial.println(vccRef);
+	Serial.println(vccRef_3_2);
+	response("ready");
+#endif
 }
 
 void loop() {
@@ -31,13 +41,17 @@ void loop() {
 }
 
 void response(const char *buf) {
+#ifdef DEBUG
+	Serial.println();
+	Serial.println(buf);
+#else
 	Serial.print(buf);
-	Serial.print('\r');
+	Serial.print(TX_EOL);
+#endif
 }
 
 void response(const String &buf) {
-	Serial.print(buf);
-	Serial.print('\r');
+	response(buf.c_str());
 }
 
 void ups_parse() {
@@ -53,11 +67,12 @@ void ups_parse() {
 	} else if (rx == "D") {
 		// STATUS INQUIRY DISABLE
 		response("@");
-	} else if (rx.startsWith("X")) {
+	} else if (rx.startsWith(UC_PRFX)) {
 		// CUSTOM CODES
-		if (rx == "Xhelp") {
+		String userCommand = rx.substring(sizeof(UC_PRFX) - 1);
+		if (userCommand == "help") {
 			response("help sys.uptime");
-		} else if (rx == "Xsys.uptime") {
+		} else if (userCommand == "sys.uptime") {
 			response("up " + uptime_formatter::getUptime());
 		} else {
 			response("@");
@@ -71,14 +86,20 @@ void ups_parse() {
 void serialEvent() {
 	while (Serial.available()) {
 		char c = (char) Serial.read();
+#ifdef DEBUG
+		if (isprint(c)) {
+			Serial.print(c);
+		}
+#endif
 		switch (c) {
 		case '\r':
 			ups_parse();
 			rx = "";
 			break;
 		default:
-			// TODO catch overflow
-			rx += c;
+			if (isprint(c) && rx.length() < RX_BUFFER_SIZE) {
+				rx += c;
+			}
 			break;
 		}
 	}
