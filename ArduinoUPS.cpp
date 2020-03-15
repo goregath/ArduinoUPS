@@ -32,6 +32,11 @@ void setup() {
 	vccRef = 1234;
 	Serial.println(vccRef);
 	Serial.println(vccRef_3_2);
+	vccRef = 0;
+	while(true) {
+		Serial.println(vccRef_3_2);
+		vccRef++;
+	}
 	response("ready");
 #endif
 }
