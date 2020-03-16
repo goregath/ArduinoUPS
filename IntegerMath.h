@@ -5,10 +5,8 @@
  *      Author: goregath
  */
 
-#ifndef INT_MATH_H_
-#define INT_MATH_H_
-
-#include <stdint.h>
+#ifndef INTEGERMATH_H_
+#define INTEGERMATH_H_
 
 static inline uint16_t ulog10i_floor(uint16_t v) {
 	return (v >= 10000u) ? 4u : (v >= 1000u) ? 3u : (v >= 100u) ? 2u :
@@ -25,4 +23,4 @@ static inline uint16_t upow10i(uint16_t n) {
 	return pow10[n];
 }
 
-#endif /* INT_MATH_H_ */
+#endif /* INTEGERMATH_H_ */

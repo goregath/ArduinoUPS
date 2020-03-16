@@ -8,12 +8,11 @@
 #ifndef UFIXEDDECIMAL_H_
 #define UFIXEDDECIMAL_H_
 
-#include <math.h>
-#include <stdint.h>
+#include <Arduino.h>
 #include <Print.h>
 #include <Printable.h>
 
-#include "int_math.h"
+#include "IntegerMath.h"
 
 template<uint16_t IP, uint16_t FP>
 class UFixedDecimal : public Printable  {
@@ -21,7 +20,7 @@ private:
 	const uint16_t &_v;
 	const float _f;
 public:
-	UFixedDecimal(uint16_t &v, float f = 1.0)
+	UFixedDecimal(const uint16_t &v, float f = 1.0)
 		: _v(v), _f(f) {
 		static_assert(IP < 5 && FP < 5, "invalid range");
 	}
@@ -29,11 +28,10 @@ public:
 	
 	size_t printTo(Print& p) const {
 		static char digits[] = "0123456789";
-		static char buf[FP != 0 ? (IP + FP + 2) : (IP + 1)];
+		static char buf[FP != 0 ? (IP + FP + 2) : (IP + 1)] = {};
 		uint16_t in = 9999;
 		uint16_t fr = 9999;
 		float v = _v * _f;
-		buf[sizeof(buf) - 1] = '\0';
 		if (v < upow10i(IP)) {
 			if (FP == 0) {
 				in = (uint16_t) (v + 0.5);
