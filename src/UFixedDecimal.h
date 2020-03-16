@@ -14,13 +14,22 @@
 
 #include "IntegerMath.h"
 
+typedef float (& ufx_conv_t)(const uint16_t &);
+
+namespace UFixedDecimalHelpers {
+	template<uint16_t DIV>
+	inline float divide(const uint16_t &v) {
+		return v / (float) DIV;
+	}
+}
+
 template<uint16_t IP, uint16_t FP>
 class UFixedDecimal : public Printable  {
 private:
 	const uint16_t &_v;
-	const float _f;
+	const ufx_conv_t _f;
 public:
-	UFixedDecimal(const uint16_t &v, float f = 1.0)
+	UFixedDecimal(const uint16_t &v, ufx_conv_t f)
 		: _v(v), _f(f) {
 		static_assert(IP < 5 && FP < 5, "invalid range");
 	}
@@ -31,7 +40,7 @@ public:
 		static char buf[FP != 0 ? (IP + FP + 2) : (IP + 1)] = {};
 		uint16_t in = 9999;
 		uint16_t fr = 9999;
-		float v = _v * _f;
+		float v = _f(_v);
 		if (v < upow10i(IP)) {
 			if (FP == 0) {
 				in = (uint16_t) (v + 0.5);

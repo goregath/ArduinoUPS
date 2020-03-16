@@ -9,7 +9,7 @@
 #include <uptime_formatter.h>
 #include "UserCommands.h"
 
-#define FXP_MILLIS 0.001
+#define FXP_MILLIS UFixedDecimalHelpers::divide<1000>
 
 UserCommands::~UserCommands() {}
 

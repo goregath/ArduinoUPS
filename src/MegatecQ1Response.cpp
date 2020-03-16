@@ -6,10 +6,11 @@
  */
 
 #include "MegatecQ1Response.h"
+
 #include "UFixedDecimal.h"
 
 #define SEND(...) ups.tx.print(__VA_ARGS__)
-#define FXP_MILLIS 0.001
+#define FXP_MILLIS UFixedDecimalHelpers::divide<1000>
 
 MegatecQ1Response::~MegatecQ1Response() {
 }
@@ -23,9 +24,9 @@ void MegatecQ1Response::respondQ1() {
 	// (MMM.M NNN.N PPP.P QQQ RR.R S.SS TT.T b7b6b5b4b3b2b1b0;
 
 	SEND('(');
-	SEND(vpwr);    // MMM.M Input voltage
+	SEND(vpwr);   // MMM.M Input voltage
 	SEND(' ');
-	SEND(vpwr);    // NNN.N Input fault voltage
+	SEND(vpwr);   // NNN.N Input fault voltage
 	SEND(' ');
 	SEND(vout);   // PPP.P Output voltage
 	SEND(' ');

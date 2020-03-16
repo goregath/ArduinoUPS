@@ -47,7 +47,6 @@ void MegatecQ1UPS::ups_parse() {
 	static MegatecQ1Response mq1Responder(* this);
 	if (rx == "Q1") {
 		// STATUS COMMAND
-		// (MMM.M NNN.N PPP.P QQQ RR.R S.SS TT.T b7b6b5b4b3b2b1b0<cr>
 		mq1Responder.respondQ1();
 	} else if (rx.startsWith("T")) {
 		// TEST COMMANDS
