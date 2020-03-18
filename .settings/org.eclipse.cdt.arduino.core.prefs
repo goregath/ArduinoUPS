@@ -1,2 +1,2 @@
 eclipse.preferences.version=1
-libraries=[{"package"\:"arduino","platform"\:"avr","library"\:"EEPROM"},"Uptime Library","Voltage Reference",{"package"\:"arduino","platform"\:"avr","library"\:"Wire"}]
+libraries=[{"package"\:"arduino","platform"\:"avr","library"\:"EEPROM"},"Uptime Library","Voltage Reference","CRC32",{"package"\:"arduino","platform"\:"avr","library"\:"Wire"}]

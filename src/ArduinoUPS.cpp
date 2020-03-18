@@ -15,10 +15,19 @@ Display display;
 Beeper beeper;
 
 void setup() {
-	Serial.begin(9600);
-	while (!Serial) {
-		;
+	if (configuration.check()) {
+		Serial.begin(
+			configuration.getSerialBaudRate(),
+			configuration.getSerialMode()
+		);
+	} else {
+		Serial.begin(9600, SERIAL_8N1);
+#ifdef DEBUG
+		while (!Serial) {;}
+		Serial.println("invalid configuration");
+#endif
 	}
+	while (!Serial) {;}
 	rx.reserve(RX_BUFFER_SIZE);
 }
 

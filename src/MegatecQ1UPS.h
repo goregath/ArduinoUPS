@@ -39,7 +39,7 @@ private:
 	const Beeper &beeper;
 
 	const String &rx;
-	const Print &tx;
+	Print &tx;
 
 	uint16_t vcc = 0;
 	uint16_t vOut = 0;
