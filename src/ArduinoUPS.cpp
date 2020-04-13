@@ -1,9 +1,10 @@
 #include <Arduino.h>
+//#include <Wire.h>
 #include <HardwareSerial.h>
 
 #include "MegatecQ1UPS.h"
-
-#define DEBUG
+#include "Display.h"
+#include "Tones.h"
 
 #define RX_BUFFER_SIZE 64
 
@@ -11,10 +12,11 @@ String rx = "";
 bool rx_ready = false;
 
 Configuration configuration;
-Display display;
-Beeper beeper;
+Display display(configuration);
+Beeper beeper(configuration);
 
 void setup() {
+//	Wire.setClock(100000L);
 	if (configuration.check()) {
 		Serial.begin(
 			configuration.getSerialBaudRate(),
@@ -22,23 +24,24 @@ void setup() {
 		);
 	} else {
 		Serial.begin(9600, SERIAL_8N1);
-#ifdef DEBUG
-		while (!Serial) {;}
-		Serial.println("invalid configuration");
-#endif
 	}
 	while (!Serial) {;}
+	beeper.enable();
+	delay(250);
+	beeper.disable();
+	display.init();
 	rx.reserve(RX_BUFFER_SIZE);
 }
 
 void loop() {
-	static MegatecQ1UPS ups(rx, Serial, configuration, display, beeper);
+	static MegatecQ1UPS ups(rx, Serial, configuration, beeper);
+	ups.update();
 	if (rx_ready) {
-		ups.ups_update();
-		ups.ups_parse();
+		ups.parse();
 		rx = "";
 		rx_ready = false;
 	}
+	display.update(ups);
 }
 
 void serialEvent() {

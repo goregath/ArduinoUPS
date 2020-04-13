@@ -113,14 +113,19 @@ void UserCommands::parse(const String &uc) {
 			print(ups.tx, offsetof(config_t, ups_model), data->ups_model, sizeof(data->ups_model));
 			ups.tx.print(F(",(version)"));
 			print(ups.tx, offsetof(config_t, ups_version), data->ups_version, sizeof(data->ups_version));
+			ups.tx.print(F(",(tone)"));
+			print(ups.tx, offsetof(config_t, tone_pitch), data->tone_pitch);
+			ups.tx.print(F(",(volume)"));
+			print(ups.tx, offsetof(config_t, tone_volume), data->tone_volume);
 			ups.tx.print('\r');
 		} else {
 			UPS_ERR
 		}
-	} else if (uc == "help set") {
-		ups.response("set [cbsih],addr,[hex|str]");
-	} else if (uc.startsWith("help")) {
-		ups.response(F("check dump get help load uptime set store unload"));
+		// TODO overthink memory consumption
+//	} else if (uc == "help set") {
+//		ups.response("set [cbsih],addr,[hex|str]");
+//	} else if (uc.startsWith("help")) {
+//		ups.response(F("check dump get help load uptime reset set store unload"));
 	} else if (uc == "load") {
 		if (data == NULL) {
 			data = malloc(sizeof(config_t));
@@ -207,6 +212,13 @@ void UserCommands::parse(const String &uc) {
 				UPS_ERR
 			}
 			free(stmt);
+		} else {
+			UPS_ERR
+		}
+	} else if (uc == "reset") {
+		if (data != NULL) {
+			ups.config.defaults(* data);
+			UPS_OK
 		} else {
 			UPS_ERR
 		}

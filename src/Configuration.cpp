@@ -54,7 +54,7 @@ bool Configuration::check() {
 uint32_t Configuration::getVccInternalReference() {
 	uint32_t val = 0;
 	EEPROM.get(eeprom_offset + offsetof(eeprom_layout, data.int_vref), val);
-	if (! val) {
+	if (val == 0) {
 		return config_defaults.int_vref;
 	}
 	return val;
@@ -63,7 +63,7 @@ uint32_t Configuration::getVccInternalReference() {
 uint32_t Configuration::getSerialBaudRate() {
 	uint32_t val = 0;
 	EEPROM.get(eeprom_offset + offsetof(eeprom_layout, data.serial_baud), val);
-	if (! val) {
+	if (val == 0) {
 		return config_defaults.serial_baud;
 	}
 	return val;
@@ -72,10 +72,50 @@ uint32_t Configuration::getSerialBaudRate() {
 uint8_t Configuration::getSerialMode() {
 	uint8_t val = 0;
 	EEPROM.get(eeprom_offset + offsetof(eeprom_layout, data.serial_mode), val);
-	if (! val) {
+	if (val == 0) {
 		return config_defaults.serial_mode;
 	}
 	return val;
+}
+
+void Configuration::getUPSCompany(char *buf, size_t len) {
+	decltype(eeprom_layout::data.ups_company) fbuf;
+	EEPROM.get(eeprom_offset + offsetof(eeprom_layout, data.ups_company), fbuf);
+	memcpy(buf, fbuf, min(len, sizeof(fbuf)));
+}
+
+void Configuration::getUPSModel(char *buf, size_t len) {
+	decltype(eeprom_layout::data.ups_model) fbuf;
+	EEPROM.get(eeprom_offset + offsetof(eeprom_layout, data.ups_model), fbuf);
+	memcpy(buf, fbuf, min(len, sizeof(fbuf)));
+}
+
+void Configuration::getUPSVersion(char *buf, size_t len) {
+	decltype(eeprom_layout::data.ups_version) fbuf;
+	EEPROM.get(eeprom_offset + offsetof(eeprom_layout, data.ups_version), fbuf);
+	memcpy(buf, fbuf, min(len, sizeof(fbuf)));
+}
+
+uint32_t Configuration::getTonePitch() {
+	uint32_t val = 0;
+	EEPROM.get(eeprom_offset + offsetof(eeprom_layout, data.tone_pitch), val);
+	if (val == 0) {
+		return config_defaults.tone_pitch;
+	}
+	return val;
+}
+
+uint8_t Configuration::getToneVolume() {
+	uint8_t val = 0;
+	EEPROM.get(eeprom_offset + offsetof(eeprom_layout, data.tone_volume), val);
+	if (val == 0) {
+		return config_defaults.tone_volume;
+	}
+	return val;
+}
+
+void Configuration::defaults(config_t &data) {
+	memcpy_P(&data, &config_defaults, sizeof(config_t));
 }
 
 void Configuration::load(config_t &data) {

@@ -5,7 +5,7 @@
  *      Author: goregath
  */
 
-#define DEBUG
+//#define DEBUG
 
 #include <Arduino.h>
 #include <VoltageReference.h>
@@ -14,27 +14,26 @@
 
 #include "MegatecQ1UPS.h"
 #include "MegatecQ1Response.h"
-#include "UserCommands.h"
+//#include "UserCommands.h"
 
 #define TX_EOL '\r'
 
 const char UC_PRFX[] = "@";
 
 MegatecQ1UPS::MegatecQ1UPS(
-	String &rx, Print &tx, Configuration &config,
-	Display &display, Beeper &beeper)
+	String &rx, Print &tx, Configuration &config, Beeper &beeper)
 	: rx(rx)
 	, tx(tx)
 	, config(config)
-	, display(display)
 	, beeper(beeper) {
 	vRef.begin(config.getVccInternalReference());
+//	pinMode(PWM_BUZZER_PIN, OUTPUT);
 #ifdef DEBUG
 	tx.println("ups ready");
 #endif
 }
 
-void MegatecQ1UPS::ups_update() {
+void MegatecQ1UPS::update() {
 	vcc = vRef.readVcc();
 	vPwr = analogRead(VPWR_PIN) * vcc / 1024;
 	vBat = analogRead(VBAT_PIN) * vcc / 1024;
@@ -42,8 +41,8 @@ void MegatecQ1UPS::ups_update() {
 	vTmp = analogRead(TMP0_PIN) * vcc / 1024;
 }
 
-void MegatecQ1UPS::ups_parse() {
-	static UserCommands userCommands(* this);
+void MegatecQ1UPS::parse() {
+//	static UserCommands userCommands(* this);
 	static MegatecQ1Response mq1Responder(* this);
 	if (rx == "Q1") {
 		// STATUS COMMAND
@@ -60,10 +59,23 @@ void MegatecQ1UPS::ups_parse() {
 	} else if (rx == "D") {
 		// STATUS INQUIRY DISABLE
 		response("@");
-	} else if (rx.startsWith(UC_PRFX)) {
-		// CUSTOM CODES
-		String uc = rx.substring(sizeof(UC_PRFX) - 1);
-		userCommands.parse(uc);
+	} else if (rx == "F") {
+		// UPS RATING INFORMATION
+		mq1Responder.respondF();
+	} else if (rx == "I") {
+		// UPS INFORMATION COMMAND
+		mq1Responder.respondI();
+	} else if (rx == "Q") {
+		// TURN ON/OFF BEEP - TOGGLE THE UPS BEEPER
+		if (beeper.isActive()) {
+			beeper.disable();
+		} else {
+			beeper.enable();
+		}
+//	} else if (rx.startsWith(UC_PRFX)) {
+//		// CUSTOM CODES
+//		String uc = rx.substring(sizeof(UC_PRFX) - 1);
+//		userCommands.parse(uc);
 	} else {
 		// INVALID COMMAND
 		response(rx.c_str());

@@ -6,15 +6,27 @@
  */
 
 #include <Arduino.h>
+#include <toneAC.h>
 
 #include "Beeper.h"
 
-Beeper::Beeper() {
-	// TODO Auto-generated constructor stub
+bool active = false;
 
+Beeper::Beeper(Configuration &conf)
+	: frequency_hz(conf.getTonePitch())
+	, volume(map(conf.getToneVolume(), 0, 255, 0, 10)) {}
+Beeper::~Beeper() {}
+
+void Beeper::enable() {
+	toneAC(frequency_hz, volume, 0, true);
+	active = true;
 }
 
-Beeper::~Beeper() {
-	// TODO Auto-generated destructor stub
+void Beeper::disable() {
+	noToneAC();
+	active = false;
 }
 
+bool Beeper::isActive() {
+	return active;
+}

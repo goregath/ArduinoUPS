@@ -15,5 +15,4 @@
 #define VOUT_PIN A2
 #define TMP0_PIN A3
 
-
 #endif /* PINOUT_H_ */
