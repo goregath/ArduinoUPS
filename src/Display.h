@@ -8,6 +8,7 @@
 #ifndef DISPLAY_H_
 #define DISPLAY_H_
 
+#include "Definitions.h"
 #include "Configuration.h"
 #include "MegatecQ1UPS.h"
 

@@ -1,7 +1,7 @@
 #include <Arduino.h>
-//#include <Wire.h>
 #include <HardwareSerial.h>
 
+#include "Definitions.h"
 #include "MegatecQ1UPS.h"
 #include "Display.h"
 #include "Tones.h"
@@ -12,25 +12,30 @@ String rx = "";
 bool rx_ready = false;
 
 Configuration configuration;
-Display display(configuration);
 Beeper beeper(configuration);
+#ifdef HAS_DISPLAY
+Display display(configuration);
+#endif
 
 void setup() {
-//	Wire.setClock(100000L);
+	rx.reserve(RX_BUFFER_SIZE);
 	if (configuration.check()) {
 		Serial.begin(
 			configuration.getSerialBaudRate(),
 			configuration.getSerialMode()
 		);
 	} else {
-		Serial.begin(9600, SERIAL_8N1);
+		Serial.begin(SERIAL_BAUD, SERIAL_MODE);
 	}
 	while (!Serial) {;}
+#ifdef HAS_BEEPER
 	beeper.enable();
 	delay(250);
 	beeper.disable();
+#endif
+#ifdef HAS_DISPLAY
 	display.init();
-	rx.reserve(RX_BUFFER_SIZE);
+#endif
 }
 
 void loop() {
@@ -41,7 +46,9 @@ void loop() {
 		rx = "";
 		rx_ready = false;
 	}
+#ifdef HAS_DISPLAY
 	display.update(ups);
+#endif
 }
 
 void serialEvent() {

@@ -10,6 +10,7 @@
 
 #include <Print.h>
 #include <Printable.h>
+#include "Definitions.h"
 
 class ULongB10 : public Printable {
 private:
@@ -18,9 +19,7 @@ public:
 	ULongB10(unsigned long &val) : _val(val) {}
 	virtual ~ULongB10() {}
 	
-	size_t printTo(Print& p) const {
-		return p.print(_val, 10);
-	}
+	size_t printTo(Print& p) const;
 };
 
 #endif /* ULONGB10_H_ */

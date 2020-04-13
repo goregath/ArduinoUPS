@@ -9,16 +9,16 @@
 #define CONFIGURATION_H_
 
 #include <Arduino.h>
-
+#include "Definitions.h"
 #include "Tones.h"
 
 struct config_t {
-	uint32_t int_vref = 1126400L;
-	uint32_t serial_baud = 2400;
-	uint8_t serial_mode = SERIAL_8N1;
-	char ups_company[15] = "";
-	char ups_model[10] = "";
-	char ups_version[10] = "";
+	uint32_t int_vref = INTERNAL_VREF;
+	uint32_t serial_baud = SERIAL_BAUD;
+	uint8_t serial_mode = SERIAL_MODE;
+	char ups_company[15] = UPS_COMPANY;
+	char ups_model[10] = UPS_MODEL;
+	char ups_version[10] = UPS_VERSION;
 	uint32_t tone_pitch = NOTE_C7;
 	uint8_t tone_volume = 255;
 };

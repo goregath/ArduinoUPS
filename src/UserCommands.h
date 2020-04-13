@@ -8,7 +8,10 @@
 #ifndef USERCOMMANDS_H_
 #define USERCOMMANDS_H_
 
+#include "Definitions.h"
 #include "MegatecQ1UPS.h"
+
+const char UC_PRFX[] = "@";
 
 class UserCommands {
 public:

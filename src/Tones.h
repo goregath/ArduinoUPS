@@ -1,6 +1,7 @@
-#ifndef SRC_TONES_H_
-#define SRC_TONES_H_
+#ifndef TONES_H_
+#define TONES_H_
 
+#include "Definitions.h"
 
 #define NOTE_B0  31
 #define NOTE_C1  33
@@ -93,4 +94,4 @@
 #define NOTE_DS8 4978
 
 
-#endif /* SRC_TONES_H_ */
+#endif /* TONES_H_ */

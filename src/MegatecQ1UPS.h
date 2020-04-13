@@ -13,6 +13,7 @@
 #include <Arduino.h>
 #include <VoltageReference.h>
 
+#include "Definitions.h"
 #include "UFixedDecimal.h"
 #include "Beeper.h"
 #include "Pinout.h"

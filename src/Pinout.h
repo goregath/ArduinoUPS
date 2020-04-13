@@ -9,6 +9,7 @@
 #define PINOUT_H_
 
 #include <Arduino.h>
+#include "Definitions.h"
 
 #define VBAT_PIN A0
 #define VPWR_PIN A1

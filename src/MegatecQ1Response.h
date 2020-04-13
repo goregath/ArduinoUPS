@@ -9,7 +9,7 @@
 #define MEGATECQ1RESPONSE_H_
 
 #include <Arduino.h>
-
+#include "Definitions.h"
 #include "MegatecQ1UPS.h"
 
 class MegatecQ1Response {

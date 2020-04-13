@@ -8,6 +8,8 @@
 #ifndef INTEGERMATH_H_
 #define INTEGERMATH_H_
 
+#include "Definitions.h"
+
 static inline uint16_t ulog10i_floor(uint16_t v) {
 	return (v >= 10000u) ? 4u : (v >= 1000u) ? 3u : (v >= 100u) ? 2u :
 			(v >= 10u) ? 1u : 0u;
